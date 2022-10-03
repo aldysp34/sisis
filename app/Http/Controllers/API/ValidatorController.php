@@ -14,7 +14,7 @@ class ValidatorController extends Controller
     /** Data Like User */
     public function index(){
         if($this->isValidator(auth()->user()->role)){
-            $data = Data::where('validasi_status', 1)->get();
+            $data = Data::all();
 
             return $this->onSuccess($data, 'Success Get Data');
         }
