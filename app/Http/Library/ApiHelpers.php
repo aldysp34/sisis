@@ -53,11 +53,11 @@ trait ApiHelpers
 
     
 
-    protected function userValidatedRules($id): array
+    protected function userValidatedRules($id = ""): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required']
         ];
@@ -72,7 +72,15 @@ trait ApiHelpers
             'tahun' => ['required', 'string'],
             'status' => ['required'],
             'deskripsi' => ['required', 'string', 'max:255'],
+             
+        ];
+    }
+    
+    protected function documentValidatedRules(): array
+    {
+        return [
             'document' => ['required', 'mimes:pdf,word', 'max:10240']
         ];
     }
+    
 }

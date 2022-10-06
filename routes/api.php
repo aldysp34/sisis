@@ -50,6 +50,8 @@ Route::middleware(['cors'])->group(function (){
         Route::post('/admin/user/{id}', [App\Http\Controllers\API\AdminController::class, 'deleteUser'])->name('admin_deleteUser');
         Route::post('/admin/user/edit/{id}', [App\Http\Controllers\API\AdminController::class, 'editUser'])->name('admin_editUser');
         Route::get('/admin/data/download/{id}', [App\Http\Controllers\API\UserController::class, 'downloadDocument'])->name('admin_downloadDocument');
+        Route::get('/admin/data/detail/{id}', [App\Http\Controllers\API\AdminController::class, 'detail_data'])->name('admin_detailData');
+        Route::get('/admin/user/detail/{id}', [App\Http\Controllers\API\AdminController::class, 'detail_user'])->name('admin_detailUser');
     
         /** All Levels */
         Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
@@ -58,6 +60,20 @@ Route::middleware(['cors'])->group(function (){
     /** Public  */
     Route::get('/public', [App\Http\Controllers\API\PublicController::class, 'index'])->name('public');
     Route::get('public/{id}', [App\Http\Controllers\API\PublicController::class, 'detail_data'])->name('public_detail');
+    
+    Route::get('/cleareverything', function () {
+        $clearcache = Artisan::call('cache:clear');
+        echo "Cache cleared<br>";
+    
+        $clearview = Artisan::call('view:clear');
+        echo "View cleared<br>";
+    
+        $clearconfig = Artisan::call('config:cache');
+        echo "Config cleared<br>";
+    
+        $cleardebugbar = Artisan::call('debugbar:clear');
+        echo "Debug Bar cleared<br>";
+    });
 });
 
 
