@@ -71,7 +71,7 @@ trait ApiHelpers
             'kategori' => ['required', 'string'],
             'tahun' => ['required', 'string'],
             'status' => ['required'],
-            'deskripsi' => ['required', 'string', 'max:255'],
+            'deskripsi' => ['required', 'string', 'max:500'],
              
         ];
     }
