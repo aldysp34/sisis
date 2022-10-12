@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Library\ApiHelpers;
 use App\Models\Data;
 use App\Models\Document;
+use App\Models\Panduan;
 
 class UserController extends Controller
 {
@@ -38,6 +39,18 @@ class UserController extends Controller
         $data = Data::findOrFail($id);
         if($data){
             $filePath = public_path().'/'.$data->link;
+            if(file_exists($filePath)){
+                return response()->file($filePath);
+            }else{
+                return $this->onError(404, 'Document Not Found');
+            }
+        }
+    }
+
+    public function panduan($role){
+        $data = Panduan::where('role', $role)->first();
+        if($data){
+            $filePath = public_path().'/'.$data->folder_path;
             if(file_exists($filePath)){
                 return response()->file($filePath);
             }else{

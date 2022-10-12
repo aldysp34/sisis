@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('kategori');
             $table->string('tahun');
             $table->string('status');
-            $table->string('link')->nullable();
+            $table->string('document')->nullable();
             $table->string('deskripsi');
             $table->tinyInteger('validasi_status');
             $table->timestamps();

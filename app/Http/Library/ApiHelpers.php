@@ -79,6 +79,14 @@ trait ApiHelpers
     protected function documentValidatedRules(): array
     {
         return [
+            'document' => ['mimes:pdf,word', 'max:10240']
+        ];
+    }
+
+    protected function panduanValidatedRules(): array
+    {
+        return [
+            'role' => ['required'],
             'document' => ['required', 'mimes:pdf,word', 'max:10240']
         ];
     }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Data;
 use App\Models\User;
 use App\Models\Document;
+use App\Models\Panduan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -97,10 +98,26 @@ class AdminController extends Controller
                         'data_id' => $createData->id
                     ]);
 
-                    return $this->onSuccess($createData, 'Success add new Data');
-
+                    return $this->onSuccess($createData, 'Success add new Data with Document');
                 }
-                return $this->onError(400, 'Document not Uploaded yet');
+                else{
+                    $createData = Data::create([
+                        'standar' => $request->input('standar'),
+                        'judul' => $request->input('judul'),
+                        'kategori' => $request->input('kategori'),
+                        'tahun' => $request->input('tahun'),
+                        'status' => $request->input('status'),
+                        'link' => $filePath,
+                        'deskripsi' => $request->input('deskripsi'),
+                        'validasi_status' => 0
+                    ]);
+
+                    if($createData){
+                        return $this->onSuccess($createData, 'Success add new data');
+                    }
+
+                    return $this0>onError(400, 'Failed to Add New Data');
+                };
             }
             return $this->onError(400, $validator->errors());
         }
@@ -208,6 +225,53 @@ class AdminController extends Controller
                 return $this->onError(400, 'User Not Found');
             }
             return $this->onError(400, $validator->errors());
+        }
+        return $this->onError(401, 'Unauthorized Access');
+    }
+
+    public function addPanduanFile(Request $request){
+        if($this->isAdmin(auth()->user()->role)){
+            $validator = Validator::make($request->all(), $this->panduanValidatedRules());
+            if($validator->passes()){
+                if($file = $request->file('document'))
+                $path = 'files/panduan/';
+                $name = $file->getClientOriginalName();
+                $type = $request->file('document')->getClientMimeType();
+                $size = $request->file('document')->getSize();
+                $filePath = $request->file('document')->move($path, $name);
+                $createPanduan = Panduan::create([
+                    'filename' => $name,
+                    'type' => $type,
+                    'size' => $size,
+                    'folder_path' => $filePath,
+                    'role' => $request->input('role'),
+                ]);
+
+                return $this->onSuccess($createPanduan, 'Success Add Bantuan File');
+            }
+            return $this->onError(400, $validator->errors());
+        }
+        return $this->onError(401, 'Unauthorized Access');
+    }
+
+    public function getPanduan(){
+        if($this->isAdmin(auth()->user()->role)){
+            $data = Panduan::all();
+
+            return $this->onSuccess($data, 'Success Get Data');
+        }
+        return $this->onError(401, 'Unauthorized Access');
+    }
+
+    public function deletePanduan($id){
+        if($this->isAdmin(auth()->user()->role)){
+            $data = Panduan::findOrFail($id);
+
+            if($data){
+                $data->delete();
+            }
+
+            return $this->onSuccess($data, 'Success Delete Data');
         }
         return $this->onError(401, 'Unauthorized Access');
     }

@@ -32,13 +32,16 @@ Route::middleware(['cors'])->group(function (){
         Route::get('/user', [UserController::class, 'index'])->name('user');
         Route::get('/user/{id}', [UserController::class, 'detail_data'])->name('user_data');
         Route::get('/user/download/{id}', [UserController::class, 'downloadDocument'])->name('user_download');
+        Route::get('/validator/panduan/{role}', [UserController::class, 'panduan'])->name('user_panduan');
     
         /** Validator */
         Route::get('/validator', [App\Http\Controllers\API\ValidatorController::class, 'index'])->name('validator');
         Route::get('/validator/{id}', [App\Http\Controllers\API\ValidatorController::class, 'detail_data'])->name('validator_data');
         Route::get('/validator/unvalidated', [App\Http\Controllers\API\ValidatorController::class, 'no_validasi_data'])->name('validator_unvalidated');
         Route::post('/validator/validating/{id}/{status}', [App\Http\Controllers\API\ValidatorController::class, 'validasi_data'])->name('validator_validating');
-        Route::get('/validator/download/{id}', [App\Http\Controllers\API\UserController::class, 'downloadDocument'])->name('validator_downoadDocument');
+        Route::get('/validator/download/{id}', [App\Http\Controllers\API\UserController::class, 'downloadDocument'])->name('validator_downloadDocument');
+        Route::get('/validator/panduan/{role}', [App\Http\Controllers\API\UserController::class, 'panduan'])->name('validator_panduan');
+
         
         /** Admin */
         Route::get('/admin', [App\Http\Controllers\API\AdminController::class, 'index'])->name('admin');
@@ -52,14 +55,18 @@ Route::middleware(['cors'])->group(function (){
         Route::get('/admin/data/download/{id}', [App\Http\Controllers\API\UserController::class, 'downloadDocument'])->name('admin_downloadDocument');
         Route::get('/admin/data/detail/{id}', [App\Http\Controllers\API\AdminController::class, 'detail_data'])->name('admin_detailData');
         Route::get('/admin/user/detail/{id}', [App\Http\Controllers\API\AdminController::class, 'detail_user'])->name('admin_detailUser');
+        Route::get('/admin/panduan/{role}', [App\Http\Controllers\API\UserController::class, 'panduan'])->name('admin_panduan');
+        Route::post('/admin/panduan/add_panduan', [App\Http\Controllers\API\AdminController::class, 'addPanduanFile'])->name('admin_addPanduan');
     
         /** All Levels */
         Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
+        Route::get('count_data', [App\Http\Controllers\API\PublicController::class, 'getCountData']);
     });
     
     /** Public  */
     Route::get('/public', [App\Http\Controllers\API\PublicController::class, 'index'])->name('public');
     Route::get('public/{id}', [App\Http\Controllers\API\PublicController::class, 'detail_data'])->name('public_detail');
+    Route::get('public/panduan/{role}', [App\Http\Controllers\UserController::class, 'panduan'])->name('public_panduan');
     
     Route::get('/cleareverything', function () {
         $clearcache = Artisan::call('cache:clear');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Data;
+use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
@@ -20,7 +21,7 @@ class PublicController extends Controller
         return response()->json([
             'status' => 200,
             'data' => $data,
-            'message' => 'hahaha'
+            'message' => 'Success Get Data'
         ]);
     }
 
@@ -35,8 +36,37 @@ class PublicController extends Controller
         return response()->json([
             'status' => 200,
             'data' => $data,
-            'message' => 'xixiixix'
+            'message' => 'Success Get Detail Data'
         ]);
-        
     }
+
+    public function getCountData(){
+        $data = Data::all();
+        $kategori = array();
+
+        foreach($data as $x){
+            if($data->validasi_status == 1){
+                if(array_key_exists($x->kategori, $kategori)){
+                    $kategori[$x->kategori]++;
+                }else{
+                    $kategori[$x->kategori] = 1;
+                }
+            }
+        }
+        
+        if(count($kategori) > 0){
+            return response()->json([
+                'status' => 200,
+                'data' => $kategori,
+                'message' => 'Success get Count Data'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 404,
+            'message' => 'No data in database'
+        ]);
+    }
+
+    
 }
